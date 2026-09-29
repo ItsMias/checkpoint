@@ -85,7 +85,6 @@ function landing(error = "") {
       <div class="lede">Look back at your ${yearPicker()} on Discord.</div>
 
       <div class="drop" id="drop">
-        <span class="drop-icon">${icons.upload}</span>
         <p>Drop your <b>package.zip</b> here</p>
         <label class="btn">${icons.upload} Choose file<input type="file" id="file" accept=".zip,application/zip"></label>
         <p class="local-badge">${icons.lock}<span>Read on your device. Your data is never uploaded anywhere.</span></p>

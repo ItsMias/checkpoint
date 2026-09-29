@@ -295,14 +295,6 @@ img { display: block; }
 .drop.over { background: color-mix(in srgb, var(--accent) 16%, transparent); }
 .drop p { margin: 0; color: var(--text-dim); }
 .drop input { display: none; }
-.drop-icon {
-  width: 52px; height: 52px; display: grid; place-items: center;
-  border: 1px solid var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, var(--ink));
-}
-.drop-icon svg { width: 24px; height: 24px; }
-.drop.over .drop-icon { animation: bob 600ms ease-in-out infinite alternate; }
-@keyframes bob { to { transform: translateY(-5px); } }
 .drop .local-badge {
   display: inline-flex; align-items: center; gap: 9px;
   margin-top: 4px; padding: 8px 13px;
