@@ -1,0 +1,10 @@
+# Build output (web/pkg is committed on purpose so web/ deploys as-is)
+engine/target/
+
+# Never commit personal data
+*.zip
+*.mp4
+*.mkv
+*.mov
+package-*/
+__pycache__/
