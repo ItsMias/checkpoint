@@ -85,7 +85,9 @@ async function gameArt(top) {
   }
   const out = new Map();
   for (const g of top) {
-    let app = (g.id && byId.get(g.id)) || byName.get(norm(g.name));
+    // By id, then by name, then without a trailing sequel number ("Overwatch 2" is listed as "Overwatch").
+    let app = (g.id && byId.get(g.id)) || byName.get(norm(g.name))
+      || byName.get(norm(g.name).replace(/\s+(\d+|ii|iii|iv|v)$/, ""));
     if (!app && g.id) {
       // Not in the detectable list (e.g. a Discord activity): ask for that one app.
       try {

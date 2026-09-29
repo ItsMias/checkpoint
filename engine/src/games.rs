@@ -21,18 +21,21 @@ const NOT_GAMES: &[&str] = &[
     "blender", "photoshop", "adobe photoshop", "medal", "overwolf",
 ];
 
+/// Games are keyed case-insensitively ("VALORANT" and "Valorant" are one game) and shown with
+/// the spelling seen most often.
 #[derive(Default)]
 pub struct Games {
     seen: HashMap<String, Vec<i64>>,
     played: HashMap<String, Played>,
+    spellings: HashMap<String, HashMap<String, usize>>,
     event_ids: HashSet<String>,
 }
 
 /// One game's analytics events inside the window.
 #[derive(Default)]
 struct Played {
-    /// Discord application id, for icons.
-    id: Option<String>,
+    /// Discord application ids seen for it, with counts; the most common one is used for icons.
+    ids: HashMap<String, usize>,
     launches: usize,
     heartbeat_ms: i64,
     heartbeat_sessions: HashSet<String>,
@@ -59,24 +62,39 @@ pub struct GameTotal {
 }
 
 impl Games {
+    /// Normalises a name, records its spelling, and returns the key it is counted under.
+    fn key(&mut self, raw_name: &str) -> Option<String> {
+        let name = normalise(raw_name)?;
+        let key = name.to_lowercase();
+        *self.spellings.entry(key.clone()).or_default().entry(name).or_default() += 1;
+        Some(key)
+    }
+
+    fn display(&self, key: &str) -> String {
+        self.spellings
+            .get(key)
+            .and_then(|m| m.iter().max_by(|a, b| a.1.cmp(b.1).then_with(|| b.0.cmp(a.0))).map(|(n, _)| n.clone()))
+            .unwrap_or_else(|| key.to_owned())
+    }
+
     pub fn add(&mut self, raw_name: &str, ts_ms: i64) {
-        if let Some(name) = normalise(raw_name) {
-            self.seen.entry(name).or_default().push(ts_ms);
+        if let Some(key) = self.key(raw_name) {
+            self.seen.entry(key).or_default().push(ts_ms);
         }
     }
 
     /// Records an analytics game event. The caller has already checked it is inside the window.
     pub fn add_analytics(&mut self, raw_name: &str, id: Option<String>, event_id: Option<&str>, ev: Analytics) {
-        let Some(name) = normalise(raw_name) else { return };
         // Packages sometimes repeat an event; count each once.
         if let Some(e) = event_id {
             if !self.event_ids.insert(e.to_owned()) {
                 return;
             }
         }
-        let p = self.played.entry(name).or_default();
-        if p.id.is_none() {
-            p.id = id;
+        let Some(key) = self.key(raw_name) else { return };
+        let p = self.played.entry(key).or_default();
+        if let Some(id) = id {
+            *p.ids.entry(id).or_default() += 1;
         }
         match ev {
             Analytics::Launch => p.launches += 1,
@@ -105,11 +123,11 @@ impl Games {
             let mut out: Vec<GameTotal> = self
                 .played
                 .iter()
-                .map(|(name, p)| {
+                .map(|(key, p)| {
                     let ms = p.heartbeat_ms.max(p.closed_ms);
                     GameTotal {
-                        name: name.clone(),
-                        id: p.id.clone(),
+                        name: self.display(key),
+                        id: p.ids.iter().max_by(|a, b| a.1.cmp(b.1).then_with(|| b.0.cmp(a.0))).map(|(id, _)| id.clone()),
                         sessions: p.launches.max(p.heartbeat_sessions.len()).max(p.closes).max(1),
                         hours: Some(ms as f64 / 3_600_000.0),
                     }
@@ -124,14 +142,14 @@ impl Games {
         let mut out: Vec<GameTotal> = self
             .seen
             .iter()
-            .filter_map(|(name, times)| {
+            .filter_map(|(key, times)| {
                 let mut t: Vec<i64> = times.iter().copied().filter(|&x| x >= from_ms && x < to_ms).collect();
                 if t.is_empty() {
                     return None;
                 }
                 t.sort_unstable();
                 let sessions = 1 + t.windows(2).filter(|w| w[1] - w[0] > SESSION_GAP_MS).count();
-                Some(GameTotal { name: name.clone(), id: None, sessions, hours: None })
+                Some(GameTotal { name: self.display(key), id: None, sessions, hours: None })
             })
             .collect();
         out.sort_by(|a, b| b.sessions.cmp(&a.sessions).then_with(|| a.name.cmp(&b.name)));
@@ -141,7 +159,14 @@ impl Games {
 
 /// Merges spelling variants ("Overwatch® 2" / "Overwatch 2", "osu!(lazer)" / "osu!") and drops non-games.
 fn normalise(raw: &str) -> Option<String> {
-    let mut name: String = raw.chars().filter(|c| !matches!(c, '®' | '™' | '©')).collect();
+    let mut name: String = raw.chars().filter(|c| !matches!(c, '®' | '™' | '©' | '*')).collect();
+    // Window titles: "Minecraft* 26.1.2 - Multiplayer (3rd-party Server)" -> "Minecraft 26.1.2".
+    if let Some((head, tail)) = name.split_once(" - ") {
+        let tail = tail.to_lowercase();
+        if ["multiplayer", "singleplayer", "server", "realms"].iter().any(|w| tail.contains(w)) {
+            name = head.to_owned();
+        }
+    }
     for suffix in ["(lazer)", "(stable)", "(beta)", " on GeForce NOW"] {
         if let Some(stripped) = name.trim_end().strip_suffix(suffix) {
             name = stripped.to_owned();
@@ -179,6 +204,8 @@ mod tests {
         assert_eq!(normalise("Overwatch 2 on GeForce NOW").as_deref(), Some("Overwatch 2"));
         assert_eq!(normalise("Obsidian v1.10.6"), None);
         assert_eq!(normalise("Lunar Client 1.8.9 (v2.18.5-2401)").as_deref(), Some("Minecraft"));
+        assert_eq!(normalise("Minecraft* 26.1.2 - Multiplayer (3rd-party Server)").as_deref(), Some("Minecraft"));
+        assert_eq!(normalise("Minecraft 1.21.4 - Singleplayer").as_deref(), Some("Minecraft"));
         assert_eq!(normalise("Overwatch 2").as_deref(), Some("Overwatch 2"));
         assert_eq!(normalise("GeForce NOW"), None);
         assert_eq!(normalise("Discord"), None);
@@ -195,6 +222,17 @@ mod tests {
         let t = g.totals(0, 10_000 * M);
         assert_eq!((t[0].name.as_str(), t[0].sessions), ("Minecraft", 3));
         assert_eq!((t[1].name.as_str(), t[1].sessions), ("Overwatch 2", 1));
+    }
+
+    #[test]
+    fn merges_case_variants() {
+        let mut g = Games::default();
+        for (name, id, ev) in [("VALORANT", "700", "a"), ("VALORANT", "700", "b"), ("Valorant", "700", "c"), ("valorant", "999", "d")] {
+            g.add_analytics(name, Some(id.into()), Some(ev), Analytics::Heartbeat { session: Some(ev), ms: 5 * M });
+        }
+        let t = g.totals(0, 10_000 * M);
+        assert_eq!(t.len(), 1);
+        assert_eq!((t[0].name.as_str(), t[0].id.as_deref(), t[0].sessions), ("VALORANT", Some("700"), 4));
     }
 
     #[test]
