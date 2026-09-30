@@ -86,6 +86,10 @@ img { display: block; }
   padding: 18px clamp(16px, 2.2vw, 32px);
 }
 .chrome-top > :last-child, .chrome-bottom > :last-child { justify-self: end; }
+/* Fixed columns, so the fine print stays centred even when the arrows are hidden (landing page). */
+.chrome-bottom #prev { grid-column: 1; }
+.chrome-bottom .fineprint { grid-column: 2; }
+.chrome-bottom #next { grid-column: 3; }
 /* Layers: stage backgrounds (glow, dots, rain, deco panel) < cards < header and footer. */
 .chrome-top, .chrome-bottom { position: relative; z-index: 2; }
 .slides { z-index: 1; }
