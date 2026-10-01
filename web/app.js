@@ -63,6 +63,7 @@ function swap(html) {
   el.className = "slide enter";
   el.innerHTML = html;
   slides.append(el);
+  scrollTo(0, 0);
   return el;
 }
 
