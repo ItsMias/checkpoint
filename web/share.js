@@ -4,6 +4,8 @@
 import { drawSprite, theme } from "./sprites.js";
 
 const INK = "#0d0b12";
+// Same faces as the page (fonts.css). A canvas only draws with fonts that are already loaded, so they are loaded first.
+const DISPLAY = "'Archivo SemiExpanded'", BODY = "Figtree", DIGITS = "'Checkpoint Pixel'", MONO = "'Reddit Mono'";
 
 /** "#rrggbb" + alpha -> "rgba(...)". */
 const rgba = (hex, a) => `rgba(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(",")},${a})`;
@@ -12,15 +14,26 @@ const yearOf = (s) => new Date(s.window.from).getUTCFullYear();
 export async function saveSummaryImage(s) {
   const t = theme(s.persona.id);
   const ACCENT = t.card;
-  await document.fonts.ready;
   const W = 1080, H = 1350;
+  const rows = [
+    ["MESSAGES SENT", s.messages.total.toLocaleString("en-US")],
+    s.voice && ["HOURS IN VOICE", Math.round(s.voice.hours).toLocaleString("en-US")],
+    ["EMOJIS USED", s.emojis.total.toLocaleString("en-US")],
+    s.squad[0] && ["SIDEKICK", s.squad[0].display_name],
+    s.servers[0] && ["TOP SERVER", s.servers[0].name],
+    s.games?.top[0] && ["MOST PLAYED GAME", s.games.top[0].name],
+  ].filter(Boolean);
+  // The text decides which unicode-range files (latin, latin-ext) get loaded.
+  const text = `SUMMARY ${rows.flat().join("")}${s.persona.name}`;
+  await Promise.all([`900 120px ${DISPLAY}`, `800 28px ${BODY}`, `600 44px ${BODY}`, `700 60px ${DIGITS}`, `400 15px ${MONO}`, `700 15px ${MONO}`]
+    .map((f) => document.fonts.load(f, text).catch(() => {})));
   const { c, g } = backdrop(W, H, ACCENT);
 
   // Header.
   g.fillStyle = ACCENT;
-  g.font = "800 26px Unbounded";
+  g.font = `800 28px ${BODY}`;
   g.fillText(`YOUR CHECKPOINT ${yearOf(s)}`, 72, 110);
-  g.font = "900 120px Unbounded";
+  g.font = `900 120px ${DISPLAY}`;
   g.fillText("SUMMARY", 64, 230);
 
   // Collectible card, tilted.
@@ -31,20 +44,12 @@ export async function saveSummaryImage(s) {
   g.restore();
 
   // Stats column.
-  const rows = [
-    ["MESSAGES SENT", s.messages.total.toLocaleString("en-US")],
-    s.voice && ["HOURS IN VOICE", Math.round(s.voice.hours).toLocaleString("en-US")],
-    ["EMOJIS USED", s.emojis.total.toLocaleString("en-US")],
-    s.squad[0] && ["SIDEKICK", s.squad[0].display_name],
-    s.servers[0] && ["TOP SERVER", s.servers[0].name],
-    s.games?.top[0] && ["MOST PLAYED GAME", s.games.top[0].name],
-  ].filter(Boolean);
   let y = 420;
   for (const [label, value] of rows) {
     g.fillStyle = ACCENT;
-    g.font = "800 20px Unbounded";
+    g.font = `800 22px ${BODY}`;
     g.fillText(label, 520, y);
-    g.font = /^\d/.test(value) ? "700 64px 'Pixelify Sans'" : "600 44px 'Barlow Semi Condensed'";
+    g.font = /^\d/.test(value) ? `700 60px ${DIGITS}` : `600 44px ${BODY}`;
     g.fillText(fit(g, value, 500), 520, y + 62);
     y += 140;
   }
@@ -89,20 +94,20 @@ function drawCard(g, s) {
   const scale = Math.min((aw * 0.82) / art.width, (ah * 0.82) / art.height);
   g.drawImage(art, ax + (aw - art.width * scale) / 2, ay + (ah - art.height * scale) / 2, art.width * scale, art.height * scale);
   g.fillStyle = INK;
-  g.font = "400 15px 'Space Mono'";
+  g.font = `400 15px ${MONO}`;
   g.fillText(`LVL ${s.card.level}`, -cw / 2 + 14, -ch / 2 + 28);
-  g.font = "700 14px 'Space Mono'";
+  g.font = `700 15px ${MONO}`;
   g.fillText(`CHECKPOINT ${yearOf(s)} • #${String(s.card.number).padStart(4, "0")}`, -cw / 2 + 14, ay + ah + 32);
   g.textAlign = "right";
   g.fillText(`${s.persona.number}/${s.persona.of}`, cw / 2 - 14, ay + ah + 32);
   g.textAlign = "left";
-  g.font = "900 44px Unbounded";
+  g.font = `900 44px ${DISPLAY}`;
   g.fillText(s.persona.name, -cw / 2 + 14, ay + ah + 86);
 }
 
 function footer(g, H, accent) {
   g.fillStyle = rgba(accent, 0.7);
-  g.font = "400 20px 'Space Mono'";
+  g.font = `500 22px ${BODY}`;
   g.fillText("Unofficial • Not affiliated with Discord", 72, H - 60);
 }
 

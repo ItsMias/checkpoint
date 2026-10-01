@@ -1,65 +1,52 @@
-/* Self-hosted Google Fonts (SIL Open Font License), latin subset. */
+/* Self-hosted fonts. Discord's own (ABC Ginto Nord for headlines, gg sans for text) aren't free to ship, so these
+   are the closest open ones (SIL Open Font License, from Google Fonts), matched against the 2025 recap:
+   Archivo Black at 112.5% width for Ginto Nord, Figtree for gg sans, Reddit Mono for the card's mono text.
+   Checkpoint Pixel is our own: the recap's number font, rebuilt by tools/pixelfont.py. */
 @font-face {
-  font-family: 'Barlow Semi Condensed';
+  font-family: 'Archivo SemiExpanded';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 800 900;
   font-display: swap;
-  src: url("assets/fonts/BarlowSemiCondensed-500.woff2") format('woff2');
+  src: url("assets/fonts/ArchivoSemiExpanded-900-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Archivo SemiExpanded';
+  font-style: normal;
+  font-weight: 800 900;
+  font-display: swap;
+  src: url("assets/fonts/ArchivoSemiExpanded-900-latin.woff2") format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Barlow Semi Condensed';
+  font-family: 'Figtree';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 300 900;
   font-display: swap;
-  src: url("assets/fonts/BarlowSemiCondensed-600.woff2") format('woff2');
+  src: url("assets/fonts/Figtree-latin-ext.woff2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 300 900;
+  font-display: swap;
+  src: url("assets/fonts/Figtree-latin.woff2") format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Reddit Mono';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400 700;
   font-display: swap;
-  src: url("assets/fonts/PixelifySans-500.woff2") format('woff2');
+  src: url("assets/fonts/RedditMono-latin.woff2") format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+/* One weight drawn; the range stops the browser faking a bold by smearing the pixels. */
 @font-face {
-  font-family: 'Pixelify Sans';
+  font-family: 'Checkpoint Pixel';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 100 900;
   font-display: swap;
-  src: url("assets/fonts/PixelifySans-500.woff2") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Space Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url("assets/fonts/SpaceMono-400.woff2") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Space Mono';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("assets/fonts/SpaceMono-700.woff2") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Unbounded';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url("assets/fonts/Unbounded-800.woff2") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Unbounded';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url("assets/fonts/Unbounded-800.woff2") format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: url("assets/fonts/CheckpointPixel.ttf") format('truetype');
 }

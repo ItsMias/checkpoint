@@ -134,7 +134,7 @@ export const CARDS = [
           ${count(s.emojis.total)}
           <p class="lede">Here are a few of your favourites:</p>
           <div class="doodles" style="flex-wrap:wrap;gap:10px">
-            ${s.emojis.top.map((e, i) => `<span class="btn ghost" style="padding:6px 10px;font-size:22px;gap:6px"><span style="display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;font-size:22px">${emojiHtml(e, ctx).replace("<img ", '<img style="width:26px;height:26px;object-fit:contain" ')}</span><span style="font:700 13px/1 var(--digits)">#${i + 1}</span></span>`).join("")}
+            ${s.emojis.top.map((e, i) => `<span class="btn ghost" style="padding:6px 10px;font-size:22px;gap:6px"><span style="display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;font-size:22px">${emojiHtml(e, ctx).replace("<img ", '<img style="width:26px;height:26px;object-fit:contain" ')}</span><span style="font:700 20px/0.8 var(--digits)">#${i + 1}</span></span>`).join("")}
           </div>
           ${doodles(icons.smile)}
         </div>
