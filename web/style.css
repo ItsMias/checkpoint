@@ -153,6 +153,14 @@ html { scroll-padding-top: 80px; }
   color: color-mix(in srgb, var(--accent) 55%, #8a8496);
 }
 .fineprint a { color: inherit; }
+/* Author credit: beside the disclaimer, brightening to the card's accent on hover. Kept in one piece
+   so a narrow footer wraps it to the next line whole rather than splitting the name. */
+.fineprint .sep { margin: 0 0.3em; }
+.fineprint .credit {
+  white-space: nowrap;
+  text-decoration: none; transition: color 150ms ease;
+}
+.fineprint .credit:hover, .fineprint .credit:focus-visible { color: var(--accent); text-decoration: underline; }
 
 /* ---------- slides ---------- */
 
@@ -276,6 +284,8 @@ html { scroll-padding-top: 80px; }
 .year-list {
   position: absolute; left: 50%; top: calc(100% + 12px); z-index: 20;
   min-width: 130px; margin: 0; padding: 6px; list-style: none; text-align: left;
+  /* About seven years tall; older ones scroll. */
+  max-height: 318px; overflow-y: auto; overscroll-behavior: contain;
   background: var(--ink); border: 1px solid var(--accent);
   box-shadow: 5px 5px 0 0 var(--accent), 0 18px 40px rgb(0 0 0 / 0.5);
   opacity: 0; visibility: hidden;

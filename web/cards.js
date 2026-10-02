@@ -347,7 +347,7 @@ export const CARDS = [
             <h2 class="headline">Summary</h2>
             <div class="summary-grid">
               ${item(icons.chat, "Messages sent", fmt(s.messages.total))}
-              ${s.voice ? item(icons.mic, "Hours in voice", fmt(s.voice.hours)) : ""}
+              ${(s.voice?.hours ?? 0) >= 1 ? item(icons.mic, "Hours in voice", fmt(s.voice.hours)) : ""}
               ${item(icons.smile, "Emojis used", fmt(s.emojis.total))}
               ${fav ? item(icons.star, "Favourite emoji", `<span style="display:inline-flex;width:28px;height:28px;vertical-align:middle">${emojiHtml(fav, ctx).replace("<img ", '<img style="width:28px;height:28px;object-fit:contain" ')}</span>`, true) : ""}
               ${s.games?.top[0] ? item(icons.gamepad, "Most played game", esc(s.games.top[0].name), true) : ""}

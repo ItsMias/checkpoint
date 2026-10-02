@@ -17,7 +17,7 @@ export async function saveSummaryImage(s) {
   const W = 1080, H = 1350;
   const rows = [
     ["MESSAGES SENT", s.messages.total.toLocaleString("en-US")],
-    s.voice && ["HOURS IN VOICE", Math.round(s.voice.hours).toLocaleString("en-US")],
+    (s.voice?.hours ?? 0) >= 1 && ["HOURS IN VOICE", Math.round(s.voice.hours).toLocaleString("en-US")],
     ["EMOJIS USED", s.emojis.total.toLocaleString("en-US")],
     s.squad[0] && ["SIDEKICK", s.squad[0].display_name],
     s.servers[0] && ["TOP SERVER", s.servers[0].name],
@@ -54,7 +54,7 @@ export async function saveSummaryImage(s) {
     y += 140;
   }
 
-  footer(g, H, ACCENT);
+  footer(g, W, H, ACCENT);
   await download(c, `checkpoint-${yearOf(s)}.png`);
 }
 
@@ -105,10 +105,16 @@ function drawCard(g, s) {
   g.fillText(s.persona.name, -cw / 2 + 14, ay + ah + 86);
 }
 
-function footer(g, H, accent) {
+/** Same credit and disclaimer as the page footer; the site's address goes on the right, since an image can't link. */
+function footer(g, W, H, accent) {
   g.fillStyle = rgba(accent, 0.7);
   g.font = `500 22px ${BODY}`;
-  g.fillText("Unofficial • Not affiliated with Discord", 72, H - 60);
+  g.fillText("Made by ItsMias - Not affiliated with or endorsed by Discord.", 72, H - 60);
+  g.fillStyle = accent;
+  g.font = `700 22px ${BODY}`;
+  g.textAlign = "right";
+  g.fillText("checkpoint.itsmias.xyz", W - 72, H - 60);
+  g.textAlign = "left";
 }
 
 async function download(c, name) {

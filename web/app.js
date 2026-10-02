@@ -8,8 +8,9 @@ import { matrixRain } from "./matrix.js";
 import * as music from "./music.js";
 import { saveSummaryImage } from "./share.js";
 
-/** Years the recap can cover, newest first. Stats cover the whole calendar year (or the year so far). */
-const FIRST_YEAR = 2022;
+/** Years the recap can cover, newest first. Stats cover the whole calendar year (or the year so far).
+    Starts at Discord's launch: messages and the reporting log both go back to when the account was made. */
+const FIRST_YEAR = 2015;
 const THIS_YEAR = new Date().getUTCFullYear();
 const YEARS = Array.from({ length: THIS_YEAR - FIRST_YEAR + 1 }, (_, i) => THIS_YEAR - i);
 const REPO = "https://github.com/ItsMias/checkpoint";
@@ -264,13 +265,27 @@ function run(file) {
       worker.terminate();
       worker = null;
       console.info(`Checkpoint: analysed in ${data.seconds}s. Opened:`, data.opened);
-      start(data.stats, data.icons);
+      const empty = emptyYearMessage(data.stats);
+      if (empty) landing(empty);
+      else start(data.stats, data.icons);
     } else if (data.type === "error") {
       landing(data.message);
     }
   };
   worker.onerror = (e) => landing(e.message || "Something went wrong reading that file.");
   worker.postMessage({ file, ...yearWindow(year) });
+}
+
+/** Why there's nothing to show for the chosen year (e.g. the account didn't exist yet), or "" if there is. */
+function emptyYearMessage(s) {
+  const active = s.messages.total > 0 || s.emojis.total > 0 || (s.voice?.hours ?? 0) >= 1 || s.servers.length > 0;
+  if (active) return "";
+  const y = new Date(s.window.from).getUTCFullYear();
+  // A Discord ID's top bits are its creation time, in ms since 2015-01-01.
+  const created = s.user && new Date(Number((BigInt(s.user.id) >> 22n) + 1420070400000n)).getUTCFullYear();
+  return created > y
+    ? `Your account was made in ${created}, so there's nothing to show for ${y}. Pick ${created} or later.`
+    : `Nothing from ${y} turned up in this package. Try a later year.`;
 }
 
 // ---------- player ----------
