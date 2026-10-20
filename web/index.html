@@ -8,8 +8,39 @@
        Steam cover art, and asks Discord's public API about invite codes and the detectable games list. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self' https://discord.com; img-src 'self' blob: data: https://cdn.discordapp.com https://cdn.cloudflare.steamstatic.com; media-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
-  <title>Checkpoint Rewind</title>
-  <meta name="description" content="Your year on Discord, rebuilt from your own data package. Everything runs in your browser; your data is never uploaded.">
+  <title>Checkpoint Rewind: Discord Checkpoint Recap for Any Year</title>
+  <meta name="description" content="Didn't get Discord Checkpoint? Rebuild your year on Discord from your data package: messages, voice hours, servers and games. Nothing is uploaded.">
+
+  <!-- Search engines. The WebSite name is what Google shows as the site name above the result.
+       robots.txt and sitemap.xml sit next to this file; the long hex .txt is the IndexNow key
+       (see .github/workflows/pages.yml). -->
+  <link rel="canonical" href="https://checkpoint.itsmias.xyz/">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Checkpoint Rewind",
+      "url": "https://checkpoint.itsmias.xyz/"
+    },
+    {
+      "@type": "WebApplication",
+      "name": "Checkpoint Rewind",
+      "url": "https://checkpoint.itsmias.xyz/",
+      "description": "An unofficial remake of Discord Checkpoint. Rebuilds your year on Discord (messages, voice hours, top servers, games and your Checkpoint card) from your own Discord data package, for any year. Runs in your browser; nothing is uploaded.",
+      "applicationCategory": "EntertainmentApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript and WebAssembly",
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "image": "https://checkpoint.itsmias.xyz/assets/og.png",
+      "author": { "@type": "Person", "name": "Mias", "alternateName": "ItsMias", "url": "https://itsmias.xyz/" },
+      "sameAs": ["https://github.com/ItsMias/checkpoint"]
+    }
+  ]
+}
+  </script>
 
   <!-- Link previews. Discord shows the component embed below; everything else (and Discord as a
        fallback) uses the Open Graph tags. Tags must be in the HTML: crawlers don't run scripts. -->
