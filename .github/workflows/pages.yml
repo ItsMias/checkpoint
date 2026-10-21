@@ -34,7 +34,7 @@ jobs:
       - name: Ping IndexNow
         continue-on-error: true
         env:
-          HOST: checkpoint.itsmias.xyz
+          HOST: checkpoint.itsmias.com
           KEY: 8274b3aaa9faeb1b4fb4898e915e0a11
         run: |
           curl -fsS --retry 10 --retry-delay 15 --retry-all-errors -o /dev/null "https://$HOST/$KEY.txt"

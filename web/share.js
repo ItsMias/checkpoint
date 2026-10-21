@@ -113,7 +113,7 @@ function footer(g, W, H, accent) {
   g.fillStyle = accent;
   g.font = `700 22px ${BODY}`;
   g.textAlign = "right";
-  g.fillText("checkpoint.itsmias.xyz", W - 72, H - 60);
+  g.fillText("checkpoint.itsmias.com", W - 72, H - 60);
   g.textAlign = "left";
 }
 
