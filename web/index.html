@@ -104,8 +104,10 @@
   </script>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="fonts.css">
+  <link rel="stylesheet" href="itsmias-sig.css">
   <link rel="stylesheet" href="style.css">
   <script type="module" src="app.js"></script>
+  <script src="itsmias-sig.js" defer></script>
 </head>
 <body>
   <div class="stage" id="stage">
@@ -120,9 +122,13 @@
     <main class="slides" id="slides" aria-live="polite"></main>
     <footer class="chrome-bottom">
       <button class="sq shadowed" id="prev" type="button" aria-label="Previous card" hidden></button>
-      <p class="fineprint" id="fineprint"><a class="credit" href="https://itsmias.com" target="_blank" rel="noopener">Made by ItsMias</a>
-        <span class="sep" aria-hidden="true">-</span>
-        Not affiliated with or endorsed by Discord.</p>
+      <div class="fineprint" id="fineprint">
+        <a class="mias-sig mias-sig--compact" href="https://itsmias.com/" target="_blank" rel="noopener" aria-label="Made by ItsMias, itsmias.com">
+          <span class="mias-sig-label">Made by</span>
+          <span class="mias-sig-mark">ITSMIAS</span>
+        </a>
+        <p>Not affiliated with or endorsed by Discord.</p>
+      </div>
       <button class="sq shadowed" id="next" type="button" aria-label="Next card" hidden></button>
     </footer>
   </div>

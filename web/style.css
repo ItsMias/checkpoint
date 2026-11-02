@@ -148,19 +148,21 @@ html { scroll-padding-top: 80px; }
 .btn.ghost { box-shadow: none; background: transparent; }
 
 .fineprint {
-  margin: 0; text-align: center;
+  display: grid; justify-items: center; gap: 8px;
+  text-align: center;
   font: 500 13px/1.3 var(--body);
   color: color-mix(in srgb, var(--accent) 55%, #8a8496);
 }
-.fineprint a { color: inherit; }
-/* Author credit: beside the disclaimer, brightening to the card's accent on hover. Kept in one piece
-   so a narrow footer wraps it to the next line whole rather than splitting the name. */
-.fineprint .sep { margin: 0 0.3em; }
-.fineprint .credit {
-  white-space: nowrap;
-  text-decoration: none; transition: color 150ms ease;
+.fineprint p { margin: 0; }
+/* Author credit: the ItsMias signature (itsmias-sig.css), compact, above the disclaimer. Like everything
+   else it takes the card's accent: it builds in the accent, settles a shade dimmer and lights up on hover. */
+.fineprint .mias-sig {
+  --sig-ink: color-mix(in srgb, var(--accent) 70%, #cfc9dc);
+  --sig-muted: color-mix(in srgb, var(--accent) 55%, #8a8496);
+  --sig-hi: var(--accent);
+  --sig-glow: 0 0 8px color-mix(in srgb, var(--accent) 60%, transparent);
+  --sig-size: 16px;
 }
-.fineprint .credit:hover, .fineprint .credit:focus-visible { color: var(--accent); text-decoration: underline; }
 
 /* ---------- slides ---------- */
 
